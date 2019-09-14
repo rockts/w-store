@@ -42,6 +42,11 @@ function woocommerce_alipay_thank_you( $order_id ) {
   $sign_verified = woocommerce_alipay_verify_sign( $vars, $gateway );
 
   WC_Gateway_Alipay::log( $vars, 'info', true );
+
+  // 更新订单状态
+  if ( $sign_verified && ( $order->get_status() === 'on-hold' ) ) {
+    $order->update_status( 'processing', '支付宝交易号：' . $vars['trade_no'] );
+  }
 }
 
 // 验证支付宝数据签名
