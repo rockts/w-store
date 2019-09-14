@@ -19,12 +19,13 @@ return array(
     'default'       => 'no',
     'description'   => __( '记录使用支付宝支付时的调用日志。' ),
   ),
+  // 支付管理添加沙箱配置
   'sandbox' => array(
     'title'         => __( 'Sandbox', 'woocommerce' ),
     'type'          => 'checkbox',
     'label'         => __( 'Enable sandbox mode', 'woocommerce' ),
     'default'       => 'no',
-    'description'   => '启动沙箱模式时，订单金额会变成1分钱。',
+    'description'   => '启动沙箱模式时，订单金额会变成 1 分钱。',
   ),
   'title' => array(
     'title'         => __( 'Title', 'woocommerce' ),

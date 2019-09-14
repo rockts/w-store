@@ -25,6 +25,7 @@ class WC_Gateway_Alipay extends WC_Payment_Gateway {
     $this->title       = $this->get_option( 'title' );
     $this->description = $this->get_option( 'description' );
     $this->debug       = 'yes' === $this->get_option( 'debug', 'no' );
+    // 开启沙箱配置
     $this->sandbox     = 'yes' === $this->get_option( 'sandbox', 'no' );
     self::$log_enabled = $this->debug;
 
