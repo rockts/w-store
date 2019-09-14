@@ -7,22 +7,15 @@ if( ! defined( 'ABSPATH' ) ) {
 class WC_Gateway_Alipay_Request {
   public function __construct( $gateway ) {
     $this->gateway = $gateway;
-    $this->mobile = wp_is_mobile();
-
-    if ( $this->mobile ) {
-      $this->requst = new AlipayTradeWapPayRequest();
-      $this->product_code = 'QUICK_WAP_WAY';
-    } else {
-      $this->request = new AlipayTradePagePayRequest();
-      $this->product_code = 'FAST_INSTANT_TRADE_PAY';
-    }
+    $this->request = new AlipayTradePagePayRequest();
   }
 
   public function get_request_url( $order ) {
 
-    // 判断是否启动 sandbox 模式
-    $out_trade_no = $order->get_id();
+    // 给 sandbox 订单名加标记
+    $out_trade_no = $this->$gateway->sandbox ? '(sandbox)' . $order->get_id() : $order->get_id();
     $subject = get_bloginfo( 'name' ) . ': # ' . $out_trade_no;
+    // 判断是否启动 sandbox 模式
     $total_amount = $this->gateway->sandbox ? '0.01' : $order->get_total();
     $product_code = 'FAST_INSTANT_TRADE_PAY';
 
