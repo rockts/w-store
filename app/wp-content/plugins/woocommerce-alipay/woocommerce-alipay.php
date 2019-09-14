@@ -19,9 +19,7 @@ add_action( 'plugins_loaded', 'woocommerce_alipay_init' );
 
 function woocommerce_alipay_init() {
  require_once WC_ALIPAY . 'includes/class-wc-gateway-alipay.php';
- require_once WC_ALIPAY . 'includes/class-wc-gateway-alipay-notify.php';
 
- new WC_Gateway_Alipay_Notify();
 }
 
 add_filter( 'woocommerce_payment_gateways', 'woocommerce_alipay_gateway_class' );
@@ -30,6 +28,8 @@ function woocommerce_alipay_gateway_class( $methods ) {
   $methods[] = 'WC_Gateway_Alipay';
   return $methods;
 }
+
+
 
 
 
