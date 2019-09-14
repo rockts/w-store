@@ -70,7 +70,7 @@ function woocommerce_alipay_verify_sign( $data, $gateway ) {
   return $sign_verified;
 }
 
-// 添加异步通知
+// 添加异步通知接口地址
 add_action( 'rest_api_init', 'woocommerce_alipay_rest_api' );
 
 function woocommerce_alipay_rest_api() {
@@ -80,8 +80,47 @@ function woocommerce_alipay_rest_api() {
   ) );
 }
 
+// 设置支付宝异步通知地址
 function woocommerce_alipay_notify( $request ) {
-  return 'success';
+  global $woocommerce;
+  $body = $request->get_body_params();
+
+  $out_trade_no = str_replace( '(sandbox) - ', '', $body['out_trade_no'] );
+  $total_amount = $body['total_amount'];
+  $trade_status = $body['trade_status'];
+  $trade_no = $body['trade_no'];
+
+  $order = wc_get_order( $out_trade_no );
+
+  if ( ! $order ) {
+    return 'failure';
+  }
+
+  $gateway = wc_get_payment_gateway_by_order( $order );
+
+  if ( ( $order->get_tatal() !== $total_amount ) && ! $gateway->sandbox ) {
+    return 'failure';
+  }
+  
+  $gateway->log( '--- 接受到支付宝异步通知 ---' );
+  // 验证签名
+  $sign_verified = woocommerce_alipay_verify_sign( $body, $gateway );
+
+  if ( $sign_verified ) {
+
+    if ( ( $trade_status === 'TRADE_SUCCESS' ) && ( $order->get_status() === 'on-hold' ) ) {
+      $order->update_status( 'processing', '支付宝交易号：' . $trade_no );
+      $order->reduce_order_stock();
+      update_post_meta( $order->get_id(), 'trade_no', $trade_no );
+
+      // 清空购物车
+      $woocommerce->cart->empty_cart();
+    }
+
+    return 'success';
+  } else {
+    return 'failure';
+  }
 }
 
 
