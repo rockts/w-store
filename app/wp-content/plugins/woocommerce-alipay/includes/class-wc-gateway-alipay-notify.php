@@ -5,7 +5,7 @@ if( ! defined( 'ABSPATH' ) ) {
 }
 
 class WC_Gateway_Alipay_Notify {
-  public function __construct(){
+  public function __construct() {
     // 同步通知挂载(支付成功感谢页面)
     add_action( 'woocommerce_thankyou_alipay', array( $this, 'return_handler' ) );
     // 异步通知挂载
@@ -77,7 +77,7 @@ class WC_Gateway_Alipay_Notify {
 
     $gateway = wc_get_payment_gateway_by_order( $order );
 
-    if ( ( $order->get_tatal() !== $total_amount ) && ! $gateway->sandbox ) {
+    if ( ( $order->get_total() !== $total_amount ) && ! $gateway->sandbox ) {
       return 'failure';
     }
 

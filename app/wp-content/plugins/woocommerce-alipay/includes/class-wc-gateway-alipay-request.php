@@ -12,8 +12,8 @@ class WC_Gateway_Alipay_Request {
 
     //判断移动端还是网页端
     if ( $this->mobile ) {
-      $this->request = new AlipayTradeWapRequest();
-      $this->product_cpde = 'QUICK_WAP_WAY'; 
+      $this->request = new AlipayTradeWapPayRequest();
+      $this->product_code = 'QUICK_WAP_WAY'; 
     } else {
       $this->request = new AlipayTradePagePayRequest();
       $this->product_code = 'FAST_INSTANT_TRADE_PAY';
@@ -23,7 +23,7 @@ class WC_Gateway_Alipay_Request {
   public function get_request_url( $order ) {
 
     // 给 sandbox 订单名加标记
-    $out_trade_no = $this->$gateway->sandbox ? '(sandbox)' . $order->get_id() : $order->get_id();
+    $out_trade_no = $this->gateway->sandbox ? '(sandbox)' . $order->get_id() : $order->get_id();
     $subject = get_bloginfo( 'name' ) . ': # ' . $out_trade_no;
     // 判断是否启动 sandbox 模式
     $total_amount = $this->gateway->sandbox ? '0.01' : $order->get_total();
