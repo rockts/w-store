@@ -1,0 +1,10 @@
+/*
+Theme Name: Twenty Nineteen Child
+Template: twentynineteen
+*/
+
+.site-title {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 700;
+}
