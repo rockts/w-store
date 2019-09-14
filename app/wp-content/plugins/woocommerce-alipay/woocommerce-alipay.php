@@ -46,6 +46,8 @@ function woocommerce_alipay_thank_you( $order_id ) {
   // 更新订单状态
   if ( $sign_verified && ( $order->get_status() === 'on-hold' ) ) {
     $order->update_status( 'processing', '支付宝交易号：' . $vars['trade_no'] );
+    // 更新订单自定义字段
+    update_post_meta( $order_id, 'trade_no', $vars['trade_no'] );
   }
 }
 
