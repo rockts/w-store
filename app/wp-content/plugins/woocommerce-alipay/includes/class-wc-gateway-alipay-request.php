@@ -30,7 +30,7 @@ class WC_Gateway_Alipay_Request {
     $product_code = $this->product_code;
 
     $biz_content_raw = array(
-      'out_trade_no'  => $total_amount,
+      'out_trade_no'  => $out_trade_no,
       'subject'       => $subject,
       'total_amount'  => $total_amount,
       'product_code'  => $product_code,

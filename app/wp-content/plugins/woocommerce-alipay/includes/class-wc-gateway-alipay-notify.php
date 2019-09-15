@@ -86,7 +86,6 @@ class WC_Gateway_Alipay_Notify {
     $sign_verified = $this->verify_sign( $body, $gateway );
 
     if ( $sign_verified ) {
-
       if ( ( $trade_status === 'TRADE_SUCCESS' ) && ( $order->get_status() === 'pending' ) ) {
         $order->update_status( 'processing', '支付宝交易号：' . $trade_no );
         $order->reduce_order_stock();
