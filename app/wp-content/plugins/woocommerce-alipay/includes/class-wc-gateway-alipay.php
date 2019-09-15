@@ -8,7 +8,6 @@ class WC_Gateway_Alipay extends WC_Payment_Gateway {
   public static $log_enabled;
   public static $log;
 
-
   public function __construct() {
     $this->id                 = 'alipay';
     $this->has_fields         = false;
@@ -25,11 +24,10 @@ class WC_Gateway_Alipay extends WC_Payment_Gateway {
     $this->title       = $this->get_option( 'title' );
     $this->description = $this->get_option( 'description' );
     $this->debug       = 'yes' === $this->get_option( 'debug', 'no' );
-    // 开启沙箱配置
     $this->sandbox     = 'yes' === $this->get_option( 'sandbox', 'no' );
     self::$log_enabled = $this->debug;
 
-    add_action(
+    add_action( 
       'woocommerce_update_options_payment_gateways_' . $this->id,
       array( $this, 'process_admin_options' )
     );
@@ -42,10 +40,9 @@ class WC_Gateway_Alipay extends WC_Payment_Gateway {
     $this->app_id = $this->get_option( 'app_id' );
     $this->alipay_public_key = $this->get_option( 'alipay_public_key' );
     $this->merchant_private_key = $this->get_option( 'merchant_private_key' );
-
   }
 
-  public static function log( $message, $level = 'info', $return = false) {
+  public static function log( $message, $level = 'info', $return = false ) {
     if ( self::$log_enabled ) {
       if ( empty( self::$log ) ) {
         self::$log = wc_get_logger();
@@ -69,7 +66,6 @@ class WC_Gateway_Alipay extends WC_Payment_Gateway {
     WC_Gateway_Alipay::log( '使用支付宝支付订单：' . $order_id );
 
     $order = wc_get_order( $order_id );
-
 
     $alipay_request = new WC_Gateway_Alipay_Request( $this );
     $request_url = $alipay_request->get_request_url( $order );
