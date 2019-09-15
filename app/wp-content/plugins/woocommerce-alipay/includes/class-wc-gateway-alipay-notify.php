@@ -6,7 +6,9 @@ if( ! defined( 'ABSPATH' ) ) {
 
 class WC_Gateway_Alipay_Notify {
   public function __construct() {
+     // 同步通知挂载
     add_action( 'woocommerce_thankyou_alipay', array( $this, 'return_handler' ) );
+     // 异步通知挂载
     add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
   }
 
@@ -21,12 +23,15 @@ class WC_Gateway_Alipay_Notify {
 
     WC_Gateway_Alipay::log( $vars, 'info', true );
 
+    // 更新订单状态
     if ( $sign_verified && ( $order->get_status() === 'pending' ) ) {
       $order->update_status( 'processing', '支付宝交易号：' . $vars['trade_no'] );
+      // 更新订单自定义字段
       update_post_meta( $order_id, 'trade_no', $vars['trade_no'] );
     }
   }
 
+  // 验证支付宝数据签名
   public function verify_sign( $data, $gateway ) {
     $gateway->log( '--- 验证支付宝返回的数据 ---' );
 
@@ -45,6 +50,8 @@ class WC_Gateway_Alipay_Notify {
     return $sign_verified;
   }
 
+  // 处理异步通知
+  // 添加异步通知接口地址
   public function rest_api_init() {
     register_rest_route( 'alipay/v1', '/notify', array(
       'methods' => 'POST',
@@ -52,6 +59,7 @@ class WC_Gateway_Alipay_Notify {
     ) );
   }
 
+  // 设置支付宝异步通知地址
   public function notify_handler( $request ) {
     global $woocommerce;
 
@@ -75,6 +83,7 @@ class WC_Gateway_Alipay_Notify {
     }
 
     $gateway->log( '--- 接收到支付宝异步通知 ---' );
+    // 验证签名
     $sign_verified = $this->verify_sign( $body, $gateway );
 
     if ( $sign_verified ) {
@@ -83,6 +92,7 @@ class WC_Gateway_Alipay_Notify {
         $order->reduce_order_stock();
         update_post_meta( $order->get_id(), 'trade_no', $trade_no );
 
+        // 清空购物车
         $woocommerce->cart->empty_cart();
       }
 

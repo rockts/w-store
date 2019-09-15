@@ -19,6 +19,7 @@ return array(
 		'default'     => 'no',
 		'description' => '记录使用支付宝支付时的调试日志。',
 	),
+	// 支付管理添加沙箱配置
 	'sandbox' => array(
 		'title'       => __( 'Sandbox', 'woocommerce' ),
 		'type'        => 'checkbox',

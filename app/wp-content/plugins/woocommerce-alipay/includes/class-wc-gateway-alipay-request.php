@@ -7,8 +7,10 @@ if( ! defined( 'ABSPATH' ) ) {
 class WC_Gateway_Alipay_Request {
   public function __construct( $gateway ) {
     $this->gateway = $gateway;
+    // 支付宝手机网站支付
     $this->mobile = wp_is_mobile();
 
+    //判断移动端还是网页端
     if ( $this->mobile ) {
       $this->request = new AlipayTradeWapPayRequest();
       $this->product_code = 'QUICK_WAP_WAY';
@@ -19,8 +21,11 @@ class WC_Gateway_Alipay_Request {
   }
 
   public function get_request_url( $order ) {
+
+    // sandbox 订单名加标记
     $out_trade_no = $this->gateway->sandbox ? '(sandbox) - ' . $order->get_id() : $order->get_id();
     $subject = get_bloginfo( 'name' ) . ': # ' . $out_trade_no;
+    // 判断是否启动 sandbox 模式
     $total_amount = $this->gateway->sandbox ? '0.01' : $order->get_total();
     $product_code = $this->product_code;
 
