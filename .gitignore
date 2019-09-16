@@ -64,3 +64,6 @@ typings/
 .DS_store
 db/
 app/wp-content/uploads
+img/
+
+
